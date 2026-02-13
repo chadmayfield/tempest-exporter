@@ -2,6 +2,28 @@
 
 A Prometheus exporter for [WeatherFlow Tempest](https://weatherflow.com/tempest-weather-system/) weather stations. Connects via WebSocket for real-time observations and exposes them as Prometheus metrics.
 
+## Table of Contents
+
+- [Features](#features)
+- [Architecture](#architecture)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+  - [Finding Your Device ID and Station ID](#finding-your-device-id-and-station-id)
+  - [Configuration](#configuration)
+  - [Run Locally](#run-locally)
+  - [Run with Docker](#run-with-docker)
+  - [Deploy to Kubernetes](#deploy-to-kubernetes)
+- [Metrics](#metrics)
+  - [Observation Metrics](#observation-metrics)
+  - [Exporter Health](#exporter-health)
+- [HTTP Endpoints](#http-endpoints)
+- [Example PromQL Queries](#example-promql-queries)
+- [Derived Metric Formulas](#derived-metric-formulas)
+- [API Rate Limits](#api-rate-limits)
+- [Grafana Dashboard](#grafana-dashboard)
+- [Building](#building)
+- [License](#license)
+
 ## Features
 
 - Real-time observations via WebSocket (~60s intervals)
@@ -15,28 +37,28 @@ A Prometheus exporter for [WeatherFlow Tempest](https://weatherflow.com/tempest-
 ## Architecture
 
 ```
-                    ┌─────────────────────────┐
-                    │   Tempest WebSocket API  │
-                    │  wss://ws.weatherflow.com│
-                    └───────────┬──────────────┘
+                    ┌────────────────────────────┐
+                    │   Tempest WebSocket API    │
+                    │  wss://ws.weatherflow.com  │
+                    └───────────┬────────────────┘
                                 │ obs_st every ~60s
                                 │ evt_strike, evt_precip
                                 ▼
-                    ┌─────────────────────────┐
-                    │   tempest-exporter       │
-                    │                          │
-                    │  WebSocket client ──────►│ internal gauges/counters
-                    │  (reconnect on failure)  │
-                    │                          │
-                    │  GET /metrics ◄──────────│ prometheus.Handler()
-                    │  GET /healthz            │
-                    │  GET /readyz             │
-                    └───────────┬──────────────┘
+                    ┌───────────────────────────┐
+                    │   tempest-exporter        │
+                    │                           │
+                    │  WebSocket client ────────│──► internal gauges/counters
+                    │  (reconnect on failure)   │
+                    │                           │
+                    │  GET /metrics ◄───────────│─── prometheus.Handler()
+                    │  GET /healthz             │
+                    │  GET /readyz              │
+                    └───────────┬───────────────┘
                                 │ :8080/metrics
                                 ▼
                     ┌─────────────────────────┐
-                    │   VictoriaMetrics        │
-                    │   (scrapes every 60s)    │
+                    │   VictoriaMetrics       │
+                    │   (scrapes every 60s)   │
                     └─────────────────────────┘
 ```
 
