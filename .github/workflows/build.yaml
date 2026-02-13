@@ -72,7 +72,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         id: build-main
         run: |
-          IMAGE=$(ko build . --bare --tags=latest,${{ github.sha }} --sbom=spdx)
+          IMAGE=$(ko build . --bare --ldflags="-X main.version=${{ github.sha }}" --tags=latest,${{ github.sha }} --sbom=spdx)
           echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
         env:
           KO_DOCKER_REPO: ghcr.io/${{ github.repository }}
@@ -81,7 +81,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         id: build-tag
         run: |
-          IMAGE=$(ko build . --bare --tags=${{ github.ref_name }},latest --sbom=spdx)
+          IMAGE=$(ko build . --bare --ldflags="-X main.version=${{ github.ref_name }}" --tags=${{ github.ref_name }},latest --sbom=spdx)
           echo "image=$IMAGE" >> "$GITHUB_OUTPUT"
         env:
           KO_DOCKER_REPO: ghcr.io/${{ github.repository }}

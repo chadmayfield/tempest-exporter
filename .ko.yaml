@@ -4,3 +4,4 @@ defaultPlatforms:
   - linux/arm64
 defaultLdflags:
   - -s -w
+  - -X main.version=dev

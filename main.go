@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log/slog"
 	"net"
@@ -17,10 +18,19 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+var version = "dev"
+
 // validStationName matches alphanumeric, underscore, hyphen, and dot characters only.
 var validStationName = regexp.MustCompile(`^[a-zA-Z0-9_.\-]+$`)
 
 func main() {
+	showVersion := flag.Bool("version", false, "print version and exit")
+	flag.Parse()
+	if *showVersion {
+		fmt.Println(version)
+		os.Exit(0)
+	}
+
 	// Default to JSON logging; use text for local dev via LOG_FORMAT=text
 	if strings.EqualFold(os.Getenv("LOG_FORMAT"), "text") {
 		slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, nil)))
@@ -58,6 +68,7 @@ func main() {
 	}
 
 	slog.Info("starting tempest-exporter",
+		"version", version,
 		"listen_addr", listenAddr,
 		"device_id", deviceID,
 		"station_id", stationID,
