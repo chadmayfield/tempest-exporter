@@ -264,9 +264,20 @@ dew_point = (237.7 * gamma) / (17.27 - gamma)
 
 ## Grafana Dashboard
 
-A pre-built Grafana dashboard is included at `grafana/dashboard.json`. Import it into your Grafana instance for panels covering temperature, humidity, wind, pressure, solar, precipitation, lightning, battery, and exporter health.
+A pre-built Grafana dashboard is included at `grafana/dashboard.json`. Import it into your Grafana instance to get an at-a-glance overview of your Tempest station.
 
-<!-- TODO: Add dashboard screenshot -->
+![Dashboard screenshot](grafana/screenshot.png)
+
+The dashboard is organized into collapsible sections:
+
+- **Current Conditions** — hero stat panels for temperature, feels like, dew point, humidity, wind, and pressure
+- **Temperature** — air temp, feels like, and dew point over time
+- **Wind** — speed (avg/gust/lull) and direction gauge
+- **Sun & Light** — solar radiation, UV index, and illuminance
+- **Precipitation & Lightning** — rain accumulation and lightning activity
+- **System Health** — connection status, last observation age, battery voltage, and error counts
+
+Temperature is displayed in Fahrenheit and wind speed in mph (converted from the Celsius/m·s⁻¹ metrics stored in Prometheus). A `$station` template variable filters all panels when multiple stations are configured.
 
 ## Building
 

@@ -19,50 +19,129 @@
   "panels": [
     {
       "title": "Temperature",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
       "fieldConfig": {
         "defaults": {
-          "unit": "celsius",
-          "color": { "mode": "palette-classic" }
+          "unit": "fahrenheit",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null },
+              { "color": "green", "value": 32 },
+              { "color": "yellow", "value": 80 },
+              { "color": "red", "value": 95 }
+            ]
+          }
         },
         "overrides": []
       },
       "options": {
-        "tooltip": { "mode": "multi" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
+        "graphMode": "area",
+        "colorMode": "background",
+        "textMode": "value",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
       },
       "targets": [
         {
-          "expr": "tempest_air_temperature_celsius{station_name=~\"$station\"}",
-          "legendFormat": "Air Temp"
+          "expr": "tempest_air_temperature_celsius{station_name=~\"$station\"} * 9/5 + 32",
+          "legendFormat": "Temperature"
+        }
+      ]
+    },
+    {
+      "title": "Feels Like",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "fahrenheit",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null },
+              { "color": "green", "value": 32 },
+              { "color": "yellow", "value": 80 },
+              { "color": "red", "value": 95 }
+            ]
+          }
         },
+        "overrides": []
+      },
+      "options": {
+        "graphMode": "area",
+        "colorMode": "background",
+        "textMode": "value",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
+      },
+      "targets": [
         {
-          "expr": "tempest_feels_like_temperature_celsius{station_name=~\"$station\"}",
+          "expr": "tempest_feels_like_temperature_celsius{station_name=~\"$station\"} * 9/5 + 32",
           "legendFormat": "Feels Like"
+        }
+      ]
+    },
+    {
+      "title": "Dew Point",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "fahrenheit",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null },
+              { "color": "green", "value": 32 },
+              { "color": "yellow", "value": 80 },
+              { "color": "red", "value": 95 }
+            ]
+          }
         },
+        "overrides": []
+      },
+      "options": {
+        "graphMode": "area",
+        "colorMode": "background",
+        "textMode": "value",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
+      },
+      "targets": [
         {
-          "expr": "tempest_dew_point_celsius{station_name=~\"$station\"}",
+          "expr": "tempest_dew_point_celsius{station_name=~\"$station\"} * 9/5 + 32",
           "legendFormat": "Dew Point"
         }
       ]
     },
     {
       "title": "Humidity",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
       "fieldConfig": {
         "defaults": {
           "unit": "percent",
           "min": 0,
           "max": 100,
-          "color": { "mode": "fixed", "fixedColor": "blue" }
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "yellow", "value": null },
+              { "color": "green", "value": 30 },
+              { "color": "blue", "value": 80 }
+            ]
+          }
         },
         "overrides": []
       },
       "options": {
-        "tooltip": { "mode": "single" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
+        "graphMode": "area",
+        "colorMode": "background",
+        "textMode": "value",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
       },
       "targets": [
         {
@@ -73,17 +152,161 @@
     },
     {
       "title": "Wind",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
       "fieldConfig": {
         "defaults": {
-          "unit": "velocityms",
-          "color": { "mode": "palette-classic" }
+          "unit": "velocitymph",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 25 },
+              { "color": "red", "value": 45 }
+            ]
+          }
         },
         "overrides": []
       },
       "options": {
-        "tooltip": { "mode": "multi" },
+        "graphMode": "area",
+        "colorMode": "background",
+        "textMode": "value",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
+      },
+      "targets": [
+        {
+          "expr": "tempest_wind_speed_meters_per_second{station_name=~\"$station\"}",
+          "legendFormat": "Wind"
+        }
+      ]
+    },
+    {
+      "title": "Pressure",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "pressurembar",
+          "decimals": 1,
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 980 },
+              { "color": "green", "value": 1000 },
+              { "color": "yellow", "value": 1040 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "graphMode": "area",
+        "colorMode": "background",
+        "textMode": "value",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
+      },
+      "targets": [
+        {
+          "expr": "tempest_station_pressure_millibars{station_name=~\"$station\"}",
+          "legendFormat": "Pressure"
+        }
+      ]
+    },
+    {
+      "title": "Temperature",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 4 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "title": "Temperature",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 5 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "fahrenheit",
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Air Temp" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Feels Like" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Dew Point" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "blue" } }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": { "mode": "multi", "sort": "desc" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "expr": "tempest_air_temperature_celsius{station_name=~\"$station\"} * 9/5 + 32",
+          "legendFormat": "Air Temp"
+        },
+        {
+          "expr": "tempest_feels_like_temperature_celsius{station_name=~\"$station\"} * 9/5 + 32",
+          "legendFormat": "Feels Like"
+        },
+        {
+          "expr": "tempest_dew_point_celsius{station_name=~\"$station\"} * 9/5 + 32",
+          "legendFormat": "Dew Point"
+        }
+      ]
+    },
+    {
+      "title": "Wind",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 13 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "title": "Wind Speed",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 16, "x": 0, "y": 14 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "velocitymph",
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Gust" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } },
+              { "id": "custom.lineStyle", "value": { "fill": "dash", "dash": [10, 10] } }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Lull" },
+            "properties": [
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } },
+              { "id": "custom.lineStyle", "value": { "fill": "dash", "dash": [10, 10] } }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": { "mode": "multi", "sort": "desc" },
         "legend": { "displayMode": "list", "placement": "bottom" }
       },
       "targets": [
@@ -103,20 +326,31 @@
     },
     {
       "title": "Wind Direction",
-      "type": "stat",
-      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 8 },
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 14 },
       "fieldConfig": {
         "defaults": {
           "unit": "degree",
           "min": 0,
-          "max": 360
+          "max": 360,
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "blue", "value": null },
+              { "color": "green", "value": 45 },
+              { "color": "yellow", "value": 135 },
+              { "color": "red", "value": 225 },
+              { "color": "purple", "value": 315 }
+            ]
+          }
         },
         "overrides": []
       },
       "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "textMode": "value"
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
       },
       "targets": [
         {
@@ -126,32 +360,16 @@
       ]
     },
     {
-      "title": "Pressure",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 4, "y": 8 },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "pressurembar",
-          "color": { "mode": "fixed", "fixedColor": "purple" },
-          "decimals": 1
-        },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": { "mode": "single" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
-      },
-      "targets": [
-        {
-          "expr": "tempest_station_pressure_millibars{station_name=~\"$station\"}",
-          "legendFormat": "Pressure"
-        }
-      ]
+      "title": "Sun & Light",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 22 },
+      "collapsed": false,
+      "panels": []
     },
     {
-      "title": "Solar Radiation & UV",
+      "title": "Sun & Light",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 12, "y": 8 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 23 },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" }
@@ -159,19 +377,33 @@
         "overrides": [
           {
             "matcher": { "id": "byName", "options": "Solar Radiation" },
-            "properties": [{ "id": "unit", "value": "watt" }]
+            "properties": [
+              { "id": "unit", "value": "watt" },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "yellow" } },
+              { "id": "custom.axisPlacement", "value": "left" }
+            ]
           },
           {
             "matcher": { "id": "byName", "options": "UV Index" },
             "properties": [
               { "id": "unit", "value": "none" },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } },
               { "id": "custom.axisPlacement", "value": "right" }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Illuminance" },
+            "properties": [
+              { "id": "unit", "value": "lux" },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "#FADE2A" } },
+              { "id": "custom.axisPlacement", "value": "right" },
+              { "id": "custom.lineStyle", "value": { "fill": "dash", "dash": [10, 10] } }
             ]
           }
         ]
       },
       "options": {
-        "tooltip": { "mode": "multi" },
+        "tooltip": { "mode": "multi", "sort": "desc" },
         "legend": { "displayMode": "list", "placement": "bottom" }
       },
       "targets": [
@@ -182,25 +414,7 @@
         {
           "expr": "tempest_uv_index{station_name=~\"$station\"}",
           "legendFormat": "UV Index"
-        }
-      ]
-    },
-    {
-      "title": "Illuminance",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 4, "x": 20, "y": 8 },
-      "fieldConfig": {
-        "defaults": {
-          "unit": "lux",
-          "color": { "mode": "fixed", "fixedColor": "yellow" }
         },
-        "overrides": []
-      },
-      "options": {
-        "tooltip": { "mode": "single" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
-      },
-      "targets": [
         {
           "expr": "tempest_illuminance_lux{station_name=~\"$station\"}",
           "legendFormat": "Illuminance"
@@ -208,14 +422,24 @@
       ]
     },
     {
+      "title": "Precipitation & Lightning",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 31 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
       "title": "Precipitation",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 16 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 32 },
       "fieldConfig": {
         "defaults": {
           "unit": "lengthmm",
           "color": { "mode": "fixed", "fixedColor": "blue" },
-          "custom": { "drawStyle": "bars", "fillOpacity": 50 }
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 60
+          }
         },
         "overrides": []
       },
@@ -233,7 +457,7 @@
     {
       "title": "Lightning",
       "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 16 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 32 },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "palette-classic" }
@@ -241,19 +465,25 @@
         "overrides": [
           {
             "matcher": { "id": "byName", "options": "Strike Count" },
-            "properties": [{ "id": "unit", "value": "short" }]
+            "properties": [
+              { "id": "unit", "value": "short" },
+              { "id": "custom.drawStyle", "value": "bars" },
+              { "id": "custom.fillOpacity", "value": 50 },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "yellow" } }
+            ]
           },
           {
             "matcher": { "id": "byName", "options": "Avg Distance" },
             "properties": [
               { "id": "unit", "value": "km" },
-              { "id": "custom.axisPlacement", "value": "right" }
+              { "id": "custom.axisPlacement", "value": "right" },
+              { "id": "color", "value": { "mode": "fixed", "fixedColor": "purple" } }
             ]
           }
         ]
       },
       "options": {
-        "tooltip": { "mode": "multi" },
+        "tooltip": { "mode": "multi", "sort": "desc" },
         "legend": { "displayMode": "list", "placement": "bottom" }
       },
       "targets": [
@@ -268,21 +498,107 @@
       ]
     },
     {
-      "title": "Battery",
-      "type": "timeseries",
-      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 16 },
+      "title": "System Health",
+      "type": "row",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 40 },
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "title": "Connection Status",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 4, "x": 0, "y": 41 },
       "fieldConfig": {
         "defaults": {
-          "unit": "volt",
-          "color": { "mode": "fixed", "fixedColor": "green" },
-          "min": 2.0,
-          "max": 3.0
+          "color": { "mode": "thresholds" },
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": { "text": "Disconnected", "color": "red" },
+                "1": { "text": "Connected", "color": "green" }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 1 }
+            ]
+          }
         },
         "overrides": []
       },
       "options": {
-        "tooltip": { "mode": "single" },
-        "legend": { "displayMode": "list", "placement": "bottom" }
+        "graphMode": "none",
+        "colorMode": "background",
+        "textMode": "value",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
+      },
+      "targets": [
+        {
+          "expr": "tempest_up",
+          "legendFormat": "Connection"
+        }
+      ]
+    },
+    {
+      "title": "Last Observation",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 4, "x": 4, "y": 41 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "dateTimeFromNow",
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "graphMode": "none",
+        "colorMode": "background",
+        "textMode": "value",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
+      },
+      "targets": [
+        {
+          "expr": "tempest_last_observation_timestamp_seconds{station_name=~\"$station\"} * 1000",
+          "legendFormat": "Last Observation"
+        }
+      ]
+    },
+    {
+      "title": "Battery",
+      "type": "gauge",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 41 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "volt",
+          "min": 2.0,
+          "max": 3.0,
+          "decimals": 2,
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "yellow", "value": 2.3 },
+              { "color": "green", "value": 2.5 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "showThresholdLabels": true,
+        "showThresholdMarkers": true
       },
       "targets": [
         {
@@ -292,56 +608,31 @@
       ]
     },
     {
-      "title": "Exporter Health",
+      "title": "Reconnects / Errors",
       "type": "stat",
-      "gridPos": { "h": 4, "w": 24, "x": 0, "y": 24 },
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 41 },
       "fieldConfig": {
         "defaults": {
-          "mappings": [],
+          "unit": "short",
+          "color": { "mode": "thresholds" },
           "thresholds": {
             "mode": "absolute",
             "steps": [
-              { "color": "red", "value": null },
-              { "color": "green", "value": 1 }
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 5 },
+              { "color": "red", "value": 20 }
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": { "id": "byName", "options": "Connected" },
-            "properties": [
-              {
-                "id": "mappings",
-                "value": [
-                  { "type": "value", "options": { "0": { "text": "Disconnected", "color": "red" }, "1": { "text": "Connected", "color": "green" } } }
-                ]
-              }
-            ]
-          },
-          {
-            "matcher": { "id": "byName", "options": "Reconnects" },
-            "properties": [{ "id": "unit", "value": "short" }]
-          },
-          {
-            "matcher": { "id": "byName", "options": "Scrape Errors" },
-            "properties": [{ "id": "unit", "value": "short" }]
-          },
-          {
-            "matcher": { "id": "byName", "options": "Last Observation" },
-            "properties": [{ "id": "unit", "value": "dateTimeFromNow" }]
-          }
-        ]
+        "overrides": []
       },
       "options": {
-        "colorMode": "background",
         "graphMode": "none",
-        "textMode": "value_and_name"
+        "colorMode": "background",
+        "textMode": "value_and_name",
+        "reduceOptions": { "calcs": ["lastNotNull"] }
       },
       "targets": [
-        {
-          "expr": "tempest_up",
-          "legendFormat": "Connected"
-        },
         {
           "expr": "tempest_websocket_reconnects_total",
           "legendFormat": "Reconnects"
@@ -349,10 +640,6 @@
         {
           "expr": "tempest_scrape_errors_total",
           "legendFormat": "Scrape Errors"
-        },
-        {
-          "expr": "tempest_last_observation_timestamp_seconds",
-          "legendFormat": "Last Observation"
         }
       ]
     }
