@@ -7,6 +7,7 @@ A Prometheus exporter for [WeatherFlow Tempest](https://weatherflow.com/tempest-
 - [Features](#features)
 - [Architecture](#architecture)
 - [Prerequisites](#prerequisites)
+- [API Usage and Rate Limits](#api-usage-and-rate-limits)
 - [Quick Start](#quick-start)
   - [Finding Your Device ID and Station ID](#finding-your-device-id-and-station-id)
   - [Configuration](#configuration)
@@ -19,7 +20,6 @@ A Prometheus exporter for [WeatherFlow Tempest](https://weatherflow.com/tempest-
 - [HTTP Endpoints](#http-endpoints)
 - [Example PromQL Queries](#example-promql-queries)
 - [Derived Metric Formulas](#derived-metric-formulas)
-- [API Rate Limits](#api-rate-limits)
 - [Grafana Dashboard](#grafana-dashboard)
 - [Building](#building)
 - [License](#license)
@@ -73,6 +73,39 @@ A custom Prometheus collector computes derived metrics (dew point, feels like) a
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) (for Kubernetes deployment)
 - A WeatherFlow Tempest weather station
 - A WeatherFlow API token ([get one here](https://tempestwx.com/settings/tokens))
+
+## API Usage and Rate Limits
+
+### How This Exporter Uses the API
+
+This exporter is **read-only** and makes minimal use of the WeatherFlow API:
+
+- **1 persistent WebSocket connection** to `wss://ws.weatherflow.com/swd/data` — receives observations pushed by the server every ~60 seconds
+- **REST fallback only** — if the WebSocket is disconnected for >5 minutes, polls `swd.weatherflow.com` at most once per minute until the WebSocket reconnects
+
+### Rate Limits
+
+WeatherFlow enforces the following rate limits **per user** (shared across all tokens belonging to your account):
+
+| Resource | Limit |
+|----------|-------|
+| WebSocket connections | 10 concurrent |
+| REST API requests | 100 per minute |
+
+### Important Considerations
+
+- **Run only 1 replica per token.** Each instance opens its own WebSocket connection, counting against the 10-connection limit. If you run other integrations on the same account (Home Assistant, Tempest app, etc.), they share the same limits.
+- **The API token is free** for personal use with your own station, but there is no SLA on the WebSocket API. Expect occasional disconnections.
+- The most common cause of rate limit errors is failing to close connections before reconnecting. This exporter handles reconnection automatically with exponential backoff.
+
+### Network Requirements
+
+The exporter requires outbound access on port 443 to:
+
+| Host | Protocol | Purpose |
+|------|----------|---------|
+| `ws.weatherflow.com` | WSS | Real-time observations |
+| `swd.weatherflow.com` | HTTPS | REST API fallback |
 
 ## Quick Start
 
@@ -228,21 +261,6 @@ dew_point = (237.7 * gamma) / (17.27 - gamma)
 - Wind chill (T < 10C, wind > 4.8 km/h): Environment Canada formula
 - Heat index (T >= 27C, RH >= 40%): Rothfusz/NOAA regression
 - Otherwise: air temperature
-
-## API Rate Limits
-
-WeatherFlow enforces the following rate limits per user (shared across all tokens):
-
-| Resource | Limit |
-|----------|-------|
-| WebSocket connections | 10 concurrent |
-| REST API requests | 100 per minute |
-
-**Important:**
-- Run only **1 replica** per token — do not run multiple instances against the same account
-- Always close old WebSocket connections before opening new ones
-- The most common cause of rate limit errors is failing to close connections before reconnecting
-- This exporter uses 1 WebSocket connection and at most 1 REST call/minute, well within limits
 
 ## Grafana Dashboard
 
