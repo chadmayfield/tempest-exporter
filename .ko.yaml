@@ -2,6 +2,8 @@ defaultBaseImage: cgr.dev/chainguard/static
 defaultPlatforms:
   - linux/amd64
   - linux/arm64
-defaultLdflags:
-  - -s -w
-  - -X main.version=dev
+builds:
+  - id: .
+    ldflags:
+      - -s -w
+      - -X main.version={{.Env.VERSION}}
