@@ -84,7 +84,7 @@ func (r *RESTClient) FetchObservation(ctx context.Context) (*Observation, error)
 		// Redact the token from HTTP client error messages (may contain the URL).
 		return nil, fmt.Errorf("fetching observations: %s", redactToken(err.Error(), r.token))
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := io.ReadAll(io.LimitReader(resp.Body, 512))

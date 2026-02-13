@@ -270,7 +270,7 @@ func mockWSServer(_ *testing.T, messages []string) *httptest.Server {
 		if err != nil {
 			return
 		}
-		defer conn.CloseNow()
+		defer func() { _ = conn.CloseNow() }()
 
 		// Read listen_start
 		_, data, err := conn.Read(r.Context())
@@ -300,7 +300,7 @@ func mockWSServer(_ *testing.T, messages []string) *httptest.Server {
 		}
 
 		// Close the connection gracefully
-		conn.Close(websocket.StatusNormalClosure, "done")
+		_ = conn.Close(websocket.StatusNormalClosure, "done")
 	}))
 }
 
@@ -354,7 +354,7 @@ func TestConnectAndRead_MultipleMessageTypes(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
-	client.connectAndRead(ctx)
+	_ = client.connectAndRead(ctx)
 
 	if !collector.HasObservation() {
 		t.Error("expected observation from obs_st message")
@@ -451,8 +451,8 @@ func TestRun_BackoffIncreases(t *testing.T) {
 			return
 		}
 		// Read listen_start then close
-		conn.Read(r.Context())
-		conn.Close(websocket.StatusNormalClosure, "bye")
+		_, _, _ = conn.Read(r.Context())
+		_ = conn.Close(websocket.StatusNormalClosure, "bye")
 	}))
 	defer srv.Close()
 
@@ -491,7 +491,7 @@ func TestConnectAndRead_WriteError(t *testing.T) {
 			return
 		}
 		// Close immediately — don't read listen_start
-		conn.Close(websocket.StatusGoingAway, "bye")
+		_ = conn.Close(websocket.StatusGoingAway, "bye")
 	}))
 	defer srv.Close()
 
@@ -531,13 +531,13 @@ func TestReadLoop_UnparseableMessages(t *testing.T) {
 	if err != nil {
 		t.Fatalf("dial error: %v", err)
 	}
-	defer wsConn.CloseNow()
+	defer func() { _ = wsConn.CloseNow() }()
 
 	listenMsg := map[string]any{"type": "listen_start", "device_id": 12345, "id": "tempest-exporter"}
 	data, _ := json.Marshal(listenMsg)
-	wsConn.Write(ctx, websocket.MessageText, data)
+	_ = wsConn.Write(ctx, websocket.MessageText, data)
 
-	client.readLoop(ctx, wsConn)
+	_ = client.readLoop(ctx, wsConn)
 
 	// Despite unparseable messages, the valid obs_st should still be processed
 	if !collector.HasObservation() {

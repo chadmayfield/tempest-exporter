@@ -100,7 +100,7 @@ func (c *Client) connectAndRead(ctx context.Context) error {
 		// Do not wrap the dial error directly — it may contain the URL with the token.
 		return fmt.Errorf("websocket dial failed: %v", redactToken(err.Error(), c.token))
 	}
-	defer conn.CloseNow()
+	defer func() { _ = conn.CloseNow() }()
 
 	// Send listen_start to subscribe to device observations.
 	// device_id must be a number per the WeatherFlow API spec.

@@ -40,7 +40,7 @@ func TestRESTClient_FetchObservation(t *testing.T) {
 			t.Errorf("unexpected token: %s", r.URL.Query().Get("token"))
 		}
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(fixtureJSON))
+		_, _ = w.Write([]byte(fixtureJSON))
 	}))
 	defer srv.Close()
 
@@ -70,7 +70,7 @@ func TestRESTClient_FetchObservation(t *testing.T) {
 func TestRESTClient_FetchObservation_Error(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(`{"status":{"status_code":401,"status_message":"UNAUTHORIZED"}}`))
+		_, _ = w.Write([]byte(`{"status":{"status_code":401,"status_message":"UNAUTHORIZED"}}`))
 	}))
 	defer srv.Close()
 
@@ -87,7 +87,7 @@ func TestRESTClient_FetchObservation_Error(t *testing.T) {
 func TestRESTClient_FetchObservation_EmptyObs(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"obs":[]}`))
+		_, _ = w.Write([]byte(`{"obs":[]}`))
 	}))
 	defer srv.Close()
 
@@ -113,7 +113,7 @@ func TestRESTClient_FetchObservation_NullFields(t *testing.T) {
 	}`
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(nullJSON))
+		_, _ = w.Write([]byte(nullJSON))
 	}))
 	defer srv.Close()
 
@@ -156,7 +156,7 @@ func TestRESTClient_FetchObservation_RedactsToken(t *testing.T) {
 func TestRESTClient_FetchObservation_InvalidJSON(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{not valid json}`))
+		_, _ = w.Write([]byte(`{not valid json}`))
 	}))
 	defer srv.Close()
 
@@ -175,7 +175,7 @@ func TestRunFallback_PollsWhenDisconnected(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestCount++
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(fixtureJSON))
+		_, _ = w.Write([]byte(fixtureJSON))
 	}))
 	defer srv.Close()
 
@@ -212,7 +212,7 @@ func TestRunFallback_SkipsWhenConnected(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestCount++
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(fixtureJSON))
+		_, _ = w.Write([]byte(fixtureJSON))
 	}))
 	defer srv.Close()
 
