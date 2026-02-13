@@ -1,0 +1,388 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "datasource", "uid": "grafana" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "panels": [
+    {
+      "title": "Temperature",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "celsius",
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": { "mode": "multi" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "expr": "tempest_air_temperature_celsius{station_name=~\"$station\"}",
+          "legendFormat": "Air Temp"
+        },
+        {
+          "expr": "tempest_feels_like_temperature_celsius{station_name=~\"$station\"}",
+          "legendFormat": "Feels Like"
+        },
+        {
+          "expr": "tempest_dew_point_celsius{station_name=~\"$station\"}",
+          "legendFormat": "Dew Point"
+        }
+      ]
+    },
+    {
+      "title": "Humidity",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "color": { "mode": "fixed", "fixedColor": "blue" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": { "mode": "single" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "expr": "tempest_relative_humidity_percent{station_name=~\"$station\"}",
+          "legendFormat": "Humidity"
+        }
+      ]
+    },
+    {
+      "title": "Wind",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "velocityms",
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": { "mode": "multi" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "expr": "tempest_wind_speed_meters_per_second{station_name=~\"$station\"}",
+          "legendFormat": "Average"
+        },
+        {
+          "expr": "tempest_wind_gust_meters_per_second{station_name=~\"$station\"}",
+          "legendFormat": "Gust"
+        },
+        {
+          "expr": "tempest_wind_lull_meters_per_second{station_name=~\"$station\"}",
+          "legendFormat": "Lull"
+        }
+      ]
+    },
+    {
+      "title": "Wind Direction",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "degree",
+          "min": 0,
+          "max": 360
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value"
+      },
+      "targets": [
+        {
+          "expr": "tempest_wind_direction_degrees{station_name=~\"$station\"}",
+          "legendFormat": "Direction"
+        }
+      ]
+    },
+    {
+      "title": "Pressure",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 4, "y": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "pressurembar",
+          "color": { "mode": "fixed", "fixedColor": "purple" },
+          "decimals": 1
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": { "mode": "single" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "expr": "tempest_station_pressure_millibars{station_name=~\"$station\"}",
+          "legendFormat": "Pressure"
+        }
+      ]
+    },
+    {
+      "title": "Solar Radiation & UV",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 12, "y": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Solar Radiation" },
+            "properties": [{ "id": "unit", "value": "watt" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "UV Index" },
+            "properties": [
+              { "id": "unit", "value": "none" },
+              { "id": "custom.axisPlacement", "value": "right" }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": { "mode": "multi" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "expr": "tempest_solar_radiation_watts{station_name=~\"$station\"}",
+          "legendFormat": "Solar Radiation"
+        },
+        {
+          "expr": "tempest_uv_index{station_name=~\"$station\"}",
+          "legendFormat": "UV Index"
+        }
+      ]
+    },
+    {
+      "title": "Illuminance",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 4, "x": 20, "y": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "lux",
+          "color": { "mode": "fixed", "fixedColor": "yellow" }
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": { "mode": "single" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "expr": "tempest_illuminance_lux{station_name=~\"$station\"}",
+          "legendFormat": "Illuminance"
+        }
+      ]
+    },
+    {
+      "title": "Precipitation",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 16 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "lengthmm",
+          "color": { "mode": "fixed", "fixedColor": "blue" },
+          "custom": { "drawStyle": "bars", "fillOpacity": 50 }
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": { "mode": "single" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "expr": "tempest_precipitation_millimeters{station_name=~\"$station\"}",
+          "legendFormat": "Rain"
+        }
+      ]
+    },
+    {
+      "title": "Lightning",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 16 },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Strike Count" },
+            "properties": [{ "id": "unit", "value": "short" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Avg Distance" },
+            "properties": [
+              { "id": "unit", "value": "km" },
+              { "id": "custom.axisPlacement", "value": "right" }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "tooltip": { "mode": "multi" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "expr": "tempest_lightning_strike_count{station_name=~\"$station\"}",
+          "legendFormat": "Strike Count"
+        },
+        {
+          "expr": "tempest_lightning_strike_distance_kilometers{station_name=~\"$station\"}",
+          "legendFormat": "Avg Distance"
+        }
+      ]
+    },
+    {
+      "title": "Battery",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 16 },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "volt",
+          "color": { "mode": "fixed", "fixedColor": "green" },
+          "min": 2.0,
+          "max": 3.0
+        },
+        "overrides": []
+      },
+      "options": {
+        "tooltip": { "mode": "single" },
+        "legend": { "displayMode": "list", "placement": "bottom" }
+      },
+      "targets": [
+        {
+          "expr": "tempest_battery_volts{station_name=~\"$station\"}",
+          "legendFormat": "Battery"
+        }
+      ]
+    },
+    {
+      "title": "Exporter Health",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 24, "x": 0, "y": 24 },
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 1 }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Connected" },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  { "type": "value", "options": { "0": { "text": "Disconnected", "color": "red" }, "1": { "text": "Connected", "color": "green" } } }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Reconnects" },
+            "properties": [{ "id": "unit", "value": "short" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Scrape Errors" },
+            "properties": [{ "id": "unit", "value": "short" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Last Observation" },
+            "properties": [{ "id": "unit", "value": "dateTimeFromNow" }]
+          }
+        ]
+      },
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "value_and_name"
+      },
+      "targets": [
+        {
+          "expr": "tempest_up",
+          "legendFormat": "Connected"
+        },
+        {
+          "expr": "tempest_websocket_reconnects_total",
+          "legendFormat": "Reconnects"
+        },
+        {
+          "expr": "tempest_scrape_errors_total",
+          "legendFormat": "Scrape Errors"
+        },
+        {
+          "expr": "tempest_last_observation_timestamp_seconds",
+          "legendFormat": "Last Observation"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["weather", "tempest", "prometheus"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "All", "value": "$__all" },
+        "definition": "label_values(tempest_air_temperature_celsius, station_name)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Station",
+        "multi": false,
+        "name": "station",
+        "options": [],
+        "query": { "query": "label_values(tempest_air_temperature_celsius, station_name)", "refId": "StandardVariableQuery" },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-24h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Tempest Weather Station",
+  "uid": "tempest-exporter",
+  "version": 1
+}

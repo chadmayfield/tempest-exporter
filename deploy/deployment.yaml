@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tempest-exporter
+  namespace: monitoring
+  labels:
+    app: tempest-exporter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tempest-exporter
+  template:
+    metadata:
+      labels:
+        app: tempest-exporter
+    spec:
+      containers:
+        - name: tempest-exporter
+          image: ko://github.com/chadmayfield/tempest-exporter
+          ports:
+            - name: metrics
+              containerPort: 8080
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: tempest-exporter-token
+            - configMapRef:
+                name: tempest-exporter-config
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "50m"
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: metrics
+            initialDelaySeconds: 5
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: metrics
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault

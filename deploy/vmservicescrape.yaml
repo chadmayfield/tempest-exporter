@@ -1,0 +1,15 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: tempest-exporter
+  namespace: monitoring
+  labels:
+    app: tempest-exporter
+spec:
+  selector:
+    matchLabels:
+      app: tempest-exporter
+  endpoints:
+    - port: metrics
+      path: /metrics
+      scrapeInterval: 60s

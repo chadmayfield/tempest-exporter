@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: tempest-exporter
+  namespace: monitoring
+  labels:
+    app: tempest-exporter
+spec:
+  selector:
+    matchLabels:
+      app: tempest-exporter
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 60s

@@ -1,0 +1,21 @@
+# Binaries
+tempest-exporter
+*.exe
+
+# Environment / secrets
+.env
+*.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Go
+vendor/
+coverage.out
+coverage.html

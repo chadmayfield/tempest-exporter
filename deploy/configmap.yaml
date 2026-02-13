@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempest-exporter-config
+  namespace: monitoring
+data:
+  TEMPEST_DEVICE_ID: ""
+  TEMPEST_STATION_ID: ""
+  TEMPEST_STATION_NAME: "tempest"
+  LISTEN_ADDR: ":8080"
